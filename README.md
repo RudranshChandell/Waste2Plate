@@ -1,143 +1,159 @@
-# Radio-Base: AI-Powered Satellite Tracking & Radio Intelligence Platform
+# Waste2Plate - Sustainable Food Redistribution Platform
 
 ## Project Rationale and Executive Summary
-Radio-Base represents the convergence of orbital mechanics, amateur radio operations, and modern full-stack software engineering. It is designed as a premier platform for real-time satellite tracking, specifically tailored for the radio enthusiast community. The system leverages a decoupled architecture, orchestrating a high-performance Java Spring Boot backend with a reactive Next.js frontend to deliver sub-second orbital data processing and visualization.
+**Waste2Plate** is a mission-driven full-stack web application designed to combat food waste by bridging the gap between surplus food providers and communities in need. By leveraging real-time geolocation services and a seamless user interface, the platform facilitates the efficient redistribution of excess food from restaurants, events, and individuals to consumers who can utilize it.
 
-The principal objective of this initiative was to engineer a system that transcends standard tracking tools by offering a seamless, highly aesthetic, and computationally efficient interface for predicting satellite passes. Unlike conventional monoliths, Radio-Base employs a modular design that ensures scalability, robust data integrity, and a premium user experience reminiscent of enterprise-grade aerospace software.
+The primary objective of this initiative is to create a decentralized, community-powered ecosystem that promotes sustainability and social welfare. By digitizing the food donation process, Waste2Plate minimizes logistical friction, ensures timely consumption of perishable goods, and fosters a culture of sharing and responsibility.
 
 ---
 
 ## Core Functional Components
-The Radio-Base ecosystem incorporates the following high-level functionalities, engineered for precision and reliability:
+The platform integrates several advanced functionalities to ensure a smooth and reliable user experience:
 
-- **Real-Time Orbit Data Aggregation**  
-  The backend integrates directly with the N2YO satellite telemetry service, performing complex data normalization to translate raw orbital elements into human-readable pass predictions. This abstraction layer shields the client from the volatility of external API structures.
+- **Dynamic Food Alert System**  
+  Providers can instantly broadcast "Food Alerts" or giveaways, detailing essential information such as food type (Veg/Non-Veg), quantity (slots), pickup location, and availability windows. This real-time data ingestion ensures that the marketplace of available food is always current.
 
-- **Geospatial & Temporal Calculation Engine**  
-  Utilizing advanced location-based algorithms within the Java backend, the system calculates precise azimuth and elevation data for satellite passes relative to the user's geodetic coordinates. This ensures that radio operators receive actionable pointing data for their antennas.
+- **Geolocation-based Discovery**  
+  The application utilizes the browser's Geolocation API and `geolib` to calculate the precise distance between the user and available food sources. This hyper-local approach prioritizes nearby options, reducing travel time and carbon footprint for collection.
 
-- **Immersive, Reactive User Interface**  
-  The frontend is constructed using Next.js 15 and React 19, rendering a high-fidelity environment. It features a "glassmorphism" design language, hardware-accelerated CSS animations for orbital visualization, and a state-managed architecture (via Zustand) that ensures fluid transitions and zero-latency feedback loops.
+- **Automated Lifecycle Management via Cloud Functions**  
+  To maintain platform integrity, Firebase Cloud Functions operate as a background service, executing scheduled cron jobs (every 10 minutes). These functions automatically transition alert statuses from "available" to "expired" or "unavailable" based on the defined time windows, ensuring users never encounter stale listings.
 
-- **Secure API Interoperability**  
-  The system employs strict CORS policies and validation layers to manage communication between the browser-based client and the secure backend server, ensuring compliance with modern web security standards while allowing for flexible deployment topologies.
+- **Secure & Scalable Architecture**  
+  Built on **Next.js 15**, the application benefits from server-side rendering and static generation for optimal performance. Data persistence and real-time updates are handled by **Firebase Firestore**, while **Descope** provides robust, passwordless authentication for secure user onboarding.
 
 ---
 
 ## System Architecture Diagram
-The architecture is meticulously architected to separate concerns between data acquisition, processing, and presentation. The Spring Boot application serves as the authoritative source of truth for orbital data, while the Next.js client handles presentation logic.
+The system is architected for high availability and low latency, leveraging serverless components where possible to reduce maintenance overhead.
 
 ```text
-+-------------------------------------------------------------------------+
-|                              User Interface                             |
-|  +-------------------------------------------------------------------+  |
-|  |                           Browser Client                          |  |
-|  |  (Next.js 15 / React 19 / Tailwind CSS)                           |  |
-|  |                                                                   |  |
-|  |   +----------------+       +-----------------+                    |  |
-|  |   | Visualization  |       |  State Manager  |                    |  |
-|  |   | (CSS Orbits)   | <---> |    (Zustand)    |                    |  |
-|  |   +----------------+       +-----------------+                    |  |
-|  +-----------------------------------|-------------------------------+  |
-|                                      | HTTP / JSON                      |
-|                                      v                                  |
-+-------------------------------------------------------------------------+
-|                           Backend Infrastructure                        |
-|  +-------------------------------------------------------------------+  |
-|  |                    Java Spring Boot Application                   |  |
-|  |                                                                   |  |
-|  |   +----------------+       +-----------------+                    |  |
-|  |   |  REST Contllr  | ----> | Satellite       |                    |  |
-|  |   |  (Location)    |       | Service         |                    |  |
-|  |   +----------------+       +---|-------------+                    |  |
-|  |                                |                                  |  |
-|  |                                v                                  |  |
-|  |                        +----------------+                         |  |
-|  |                        |   N2YO Client  |                         |  |
-|  |                        +-------|--------+                         |  |
-|  +--------------------------------|----------------------------------+  |
-|                                   | HTTPS                               |
-|                                   v                                     |
-+-------------------------------------------------------------------------+
-|                         External Telemetry Data                         |
-|                       (N2YO Satellite API)                              |
-+-------------------------------------------------------------------------+
++-----------------------------------------------------------------+
+|                          User Devices                           |
+|                  (Browsers / Mobile Web)                        |
++-----------------------------------------------------------------+
+          |                                     |
+          | HTTP / WebSocket                    | Geolocation API
+          v                                     v
++-----------------------------------------------------------------+
+|                      Next.js Frontend                           |
+|              (App Router, React 19, Tailwind v4)                |
+|                                                                 |
+|   +-------------------+    +-----------------------------+      |
+|   |   Public Pages    |    |   Protected Dashboard       |      |
+|   | (Landing, Login)  |    | (Post Alert, Claim Food)    |      |
+|   +-------------------+    +-----------------------------+      |
+|             |                            |                      |
++-------------|----------------------------|----------------------+
+              |                            |
+              v                            v
++-----------------------------------------------------------------+
+|                       Backend Services                          |
+|                                                                 |
+|  +---------------------+      +-----------------------------+   |
+|  |     Authentication  |      |      Firebase Platform      |   |
+|  |      (Descope)      |<---->|                             |   |
+|  +---------------------+      |  +-----------------------+  |   |
+|                               |  |       Firestore       |  |   |
+|                               |  | (NoSQL Real-time DB)  |  |   |
+|                               |  +-----------------------+  |   |
+|                               |             ^               |   |
+|                               |             |               |   |
+|                               |  +-----------------------+  |   |
+|                               |  |   Cloud Functions     |  |   |
+|                               |  | (Scheduled Cron Jobs) |  |   |
+|                               |  +-----------------------+  |   |
+|                               +-----------------------------+   |
++-----------------------------------------------------------------+
 ```
+
+---
 
 ## 🛠️ Technology Stack
 
-### 🚀 Frontend Architecture
-- ![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js&logoColor=white) **Server-Side Rendering & Routing**
-- ![React](https://img.shields.io/badge/React-19-blue?logo=react&logoColor=white) **Component Library**
-- ![Tailwind](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?logo=tailwind-css&logoColor=white) **Utility-First Styling**
-- ![Zustand](https://img.shields.io/badge/Zustand-State_Management-764ABC?logo=redux&logoColor=white) **Global State Management**
+### 💻 Framework & Core
+- ![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js&logoColor=white) **Next.js 15 (App Router)**
+- ![React](https://img.shields.io/badge/React-19-blue?logo=react&logoColor=white) **React 19**
+- ![Node](https://img.shields.io/badge/Node.js-v20-green?logo=node.js&logoColor=white) **Runtime Environment**
 
-### ☕ Backend Services
-- ![Java](https://img.shields.io/badge/Java-17-orange?logo=java&logoColor=white) **Amazon Corretto JDK 17**
-- ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2-6DB33F?logo=spring-boot&logoColor=white) **Application Framework**
-- ![Lombok](https://img.shields.io/badge/Lombok-Boilerplate_Reduction-red?logo=lombok&logoColor=white) **Compile-time Annotation Library**
-- ![Jackson](https://img.shields.io/badge/Jackson-JSON_Processing-gold?logo=json&logoColor=black) **Serialization Engine**
+### 🎨 Styling & UI
+- ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38B2AC?logo=tailwind-css&logoColor=white) **Tailwind CSS v4**
+- ![Shadcn UI](https://img.shields.io/badge/shadcn%2Fui-Component_Library-black?logo=shadcnui&logoColor=white) **radix-ui Primitives**
+- ![Framer Motion](https://img.shields.io/badge/Framer_Motion-Animations-0055FF?logo=framer&logoColor=white) **TW-Animate-CSS**
 
-### 🔧 Build & CI/CD
-- ![Maven](https://img.shields.io/badge/Maven-Build_Automation-C71A36?logo=apachemaven&logoColor=white) **Dependency Management**
-- ![npm](https://img.shields.io/badge/npm-Package_Manager-CB3837?logo=npm&logoColor=white) **Node Package Manager**
+### ☁️ Cloud & Backend
+- ![Firebase](https://img.shields.io/badge/Firebase-Backend_as_a_Service-FFCA28?logo=firebase&logoColor=black) **Firestore & Cloud Functions**
+- ![Descope](https://img.shields.io/badge/Descope-Auth-blueviolet) **Authentication**
 
----
-
-# Build and Deployment Instructions
-
-## Prerequisites
-- **Java Development Kit (JDK 17+)**
-- **Node.js (v18+) & npm**
-- **Maven (v3.8+)**
-- **N2YO API Key** (configured in `application.properties`)
+### 🔧 Tools & Utilities
+- ![Zod](https://img.shields.io/badge/Zod-Schema_Validation-3E67B1?logo=zod&logoColor=white) **React Hook Form Validation**
+- ![Geolib](https://img.shields.io/badge/Geolib-Geospatial-orange) **Distance Calculation**
 
 ---
 
-## 1. Backend Service Initialization
+## Build and Deployment Instructions
 
-### Configuration
-Navigate to the backend resources directory:
-```bash
-cd Backend/src/main/resources
-```
-Ensure `application.properties` contains your valid API credentials:
-```properties
-API_KEY=YOUR_N2YO_API_KEY
-N2YO_BASE_URL=https://api.n2yo.com/rest/v1/satellite/
-```
-
-### Compilation & Execution
-Navigate to the backend root and serve the application:
-```bash
-cd Backend
-mvn clean install
-mvn spring-boot:run
-```
-*The backend server will initialize on port `8080`. Validate status at `http://localhost:8080/actuator/health`.*
+### Prerequisites
+- Node.js (v18+)
+- npm or yarn
+- Firebase Account (for Firestore and Functions)
+- Descope Project ID (for Authentication)
 
 ---
 
-## 2. Frontend Client Initialization
+### 1. Installation
 
-### Dependency Installation
-Navigate to the frontend directory and hydrate the dependency tree:
+Clone the repository and install dependencies:
+
 ```bash
-cd radiobase
+git clone https://github.com/RudranshChandell/Waste2Plate.git
+cd Waste2Plate
 npm install
 ```
 
-### Development Server
-Launch the Next.js development environment:
+### 2. Environment Configuration
+
+Create a `.env.local` file in the root directory and add your environment variables:
+
+```env
+NEXT_PUBLIC_DESCOPE_PROJECT_ID=your_descope_project_id
+NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+```
+
+### 3. Local Development
+
+Start the development server:
+
 ```bash
 npm run dev
 ```
-*The user interface will be accessible at `http://localhost:3000`.*
+
+Visit `http://localhost:3000` to view the application.
+
+### 4. Firebase Functions Deployment
+
+To deploy the scheduled status update function:
+
+```bash
+cd functions
+npm install
+firebase login
+firebase deploy --only functions
+```
 
 ---
 
-## 3. Operational Verification
-1.  **Launch Backend**: Ensure the Spring Boot service is active/listening.
-2.  **Launch Frontend**: Open the web application.
-3.  **Interact**: The landing page should render the WebGL-style orbit animation.
-4.  **Data Flow**: Navigating to the dashboard will trigger calls to the backend `/api/location` endpoint, which proxies requests to N2YO and returns normalized satellite telemetry.
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1.  Fork the Project
+2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4.  Push to the Branch (`git push origin feature/AmazingFeature`)
+5.  Open a Pull Request
