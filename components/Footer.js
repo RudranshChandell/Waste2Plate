@@ -4,31 +4,28 @@ import React from "react";
 
 const Footer = () => {
 	return (
-		<footer className="bg-white fixed bottom-0 text-gray-800 px-5 py-3 w-full">
-			<div className="flex items-center justify-between">
+		<footer className="bg-[#0a0a0a] border-t border-white/10 text-gray-400 py-8 w-full z-50">
+			<div className="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
 				<div className="flex justify-center items-center">
-					<Image
-						src="/logo.png"
-						alt="Waste2Plate Logo"
-						width={120}
-						height={60}
-					/>
+					<h2 className="text-xl font-bold font-handwriting text-white">
+						Waste2Plate
+					</h2>
 				</div>
 				<div>
-					<ul className="flex gap-4">
-						<li className="mr-3">
+					<ul className="flex flex-wrap justify-center gap-6 text-sm font-medium">
+						<li className="text-gray-500">
 							<span>
-								&copy; Waste2Plate. All rights reserved.
+								&copy; {new Date().getFullYear()} Waste2Plate.
 							</span>
 						</li>
 						<li>
-							<Link href="https://github.com">Github</Link>
+							<Link href="https://github.com" className="hover:text-amber-500 transition-colors">Github</Link>
 						</li>
 						<li>
-							<Link href="https://linkedin.com">LinkedIn</Link>
+							<Link href="https://linkedin.com" className="hover:text-amber-500 transition-colors">LinkedIn</Link>
 						</li>
 						<li>
-							<Link href="https://instagram.com">Instagram</Link>
+							<Link href="https://instagram.com" className="hover:text-amber-500 transition-colors">Instagram</Link>
 						</li>
 					</ul>
 				</div>

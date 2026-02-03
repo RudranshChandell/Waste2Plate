@@ -74,7 +74,7 @@ const FoodAlertCard = ({ alert, userLocation }) => {
 	if (!alert) return null;
 
 	return (
-		<Card className="w-full max-w-md shadow-lg rounded-2xl">
+		<Card className="w-full max-w-md shadow-lg rounded-2xl border-white/10 bg-card/40 backdrop-blur-sm hover:border-orange-500/50 transition-colors duration-300">
 			<ToastContainer
 				position="top-right"
 				autoClose={1000}
@@ -87,39 +87,47 @@ const FoodAlertCard = ({ alert, userLocation }) => {
 			/>
 
 			<CardHeader>
-				<CardTitle className="text-xl font-semibold">
+				<CardTitle className="text-xl font-semibold text-white">
 					{alert.orgName || "Unknown"}
 				</CardTitle>
 			</CardHeader>
 
-			<CardContent className="space-y-2">
-				<div className="flex items-center gap-2 text-gray-600">
-					<Utensils className="w-5 h-5 text-orange-500" />
+			<CardContent className="space-y-4">
+				<div className="flex items-center gap-3 text-gray-300">
+					<div className="p-2 rounded-full bg-orange-500/20 text-orange-400">
+						<Utensils className="w-4 h-4" />
+					</div>
 					<span className="text-lg font-medium">
 						{alert.foodType}
 					</span>
 				</div>
 
-				<div className="flex items-center gap-2 text-gray-600">
-					<MapPin className="w-5 h-5 text-red-500" />
+				<div className="flex items-center gap-3 text-gray-300">
+					<div className="p-2 rounded-full bg-red-500/20 text-red-400">
+						<MapPin className="w-4 h-4" />
+					</div>
 					<span>{alert.city || "N/A"}</span>
 				</div>
 
-				<p className="text-gray-700">Quantity: {alert.slots}</p>
+				<div className="flex items-center justify-between pt-2">
+					<p className="text-gray-400 text-sm">Quantity: <span className="text-white font-bold">{alert.slots}</span></p>
 
-				<div className="flex justify-between mt-4">
-					<div>
-						{distanceKm && (
-							<p className="text-gray-600 text-sm">
-								Distance: {distanceKm}
-							</p>
-						)}
-					</div>
+					{distanceKm && (
+						<p className="text-gray-400 text-sm">
+							<span className="inline-block w-2 h-2 rounded-full bg-green-500 mr-2"></span>
+							{distanceKm} away
+						</p>
+					)}
+				</div>
 
+				<div className="pt-4">
 					<Button
 						onClick={handleClaim}
-						className="bg-orange-500 hover:bg-orange-600 text-white">
-						{claimed ? "Cancel" : "Claim"}
+						className={`w-full font-bold transition-all duration-300 ${claimed
+								? "bg-gray-600 hover:bg-gray-700 text-white"
+								: "bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white shadow-lg hover:shadow-orange-500/20"
+							}`}>
+						{claimed ? "Cancel Reservation" : "Claim Now"}
 					</Button>
 				</div>
 			</CardContent>

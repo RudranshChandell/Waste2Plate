@@ -132,10 +132,13 @@ export default function FoodAlertForm() {
 	};
 
 	return (
-		<div className="text-black p-6 rounded-xl shadow-lg max-w-2xl mx-auto border-2 border-black">
+		<div className="glass-card text-white p-8 rounded-2xl shadow-2xl max-w-2xl mx-auto border border-white/10 relative overflow-hidden">
+			{/* Bg Glow */}
+			<div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/5 rounded-full blur-[80px] -z-10 pointer-events-none"></div>
+
 			<ToastContainer
 				position="top-right"
-				autoClose={1000}
+				autoClose={2000}
 				hideProgressBar={false}
 				newestOnTop={true}
 				closeOnClick={false}
@@ -143,122 +146,131 @@ export default function FoodAlertForm() {
 				theme="dark"
 				transition={Slide}
 			/>
-			<h2 className="text-center text-2xl mb-4 font-bold">
-				Food Giveaway Page
+			<h2 className="text-center text-3xl mb-8 font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-red-500">
+				Details
 			</h2>
-			<form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-				<div className="grid grid-cols-2 gap-4">
-					<div>
-						<Label className="text-lg">Name</Label>
+			<form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+					<div className="space-y-2">
+						<Label className="text-gray-300">Giveaway Name</Label>
 						<Input
-							className="border-black text-black"
+							className="bg-white/5 border-white/10 text-white focus:border-orange-500/50 focus:ring-orange-500/20 placeholder:text-gray-600"
+							placeholder="e.g. Fresh Bread Surplus"
 							{...register("giveawayName")}
 						/>
-						<p className="text-red-500 text-sm">
+						<p className="text-red-400 text-xs">
 							{errors.giveawayName?.message}
 						</p>
 					</div>
-					<div>
-						<Label className="text-lg">Organizer</Label>
+					<div className="space-y-2">
+						<Label className="text-gray-300">Organizer Name</Label>
 						<Input
-							className="border-black text-black"
+							className="bg-white/5 border-white/10 text-white focus:border-orange-500/50 focus:ring-orange-500/20"
+							placeholder="e.g. Joe's Bakery"
 							{...register("orgName")}
 						/>
-						<p className="text-red-500 text-sm">
+						<p className="text-red-400 text-xs">
 							{errors.orgName?.message}
 						</p>
 					</div>
 				</div>
 
-				<div className="grid grid-cols-2 gap-4">
-					<div className="relative" ref={inputRef}>
-						<Label className="text-lg">City</Label>
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+					<div className="relative space-y-2" ref={inputRef}>
+						<Label className="text-gray-300">City</Label>
 						<Input
 							type="text"
 							value={query}
+							placeholder="Search city..."
 							onFocus={() => setShowSuggestions(true)}
 							onChange={(e) => {
 								setQuery(e.target.value);
 								setShowSuggestions(true);
 							}}
-							className="border border-black p-2 rounded w-full text-black"
+							className="bg-white/5 border-white/10 text-white focus:border-orange-500/50 focus:ring-orange-500/20"
 						/>
 						{showSuggestions && filteredCities.length > 0 && (
-							<ul className="absolute bg-white border w-full z-10 rounded shadow max-h-40 overflow-y-auto">
+							<ul className="absolute bg-[#1a1a1a] border border-white/10 w-full z-20 rounded-lg shadow-xl max-h-40 overflow-y-auto mt-1">
 								{filteredCities.map((city) => (
 									<li
 										key={city}
-										className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+										className="px-4 py-2 hover:bg-white/10 cursor-pointer text-gray-300 transition-colors"
 										onClick={() => handleCitySelect(city)}>
 										{city}
 									</li>
 								))}
 							</ul>
 						)}
-						<p className="text-red-500 text-sm">
+						<p className="text-red-400 text-xs">
 							{errors.city?.message}
 						</p>
 						<input type="hidden" {...register("city")} />
 					</div>
-					<div>
-						<Label className="text-lg">Address</Label>
+					<div className="space-y-2">
+						<Label className="text-gray-300">Address</Label>
 						<Input
-							className="border-black text-black"
+							className="bg-white/5 border-white/10 text-white focus:border-orange-500/50 focus:ring-orange-500/20"
+							placeholder="Full street address"
 							{...register("address")}
 						/>
-						<p className="text-red-500 text-sm">
+						<p className="text-red-400 text-xs">
 							{errors.address?.message}
 						</p>
 					</div>
 				</div>
 
-				<div>
-					<Label className="text-lg">Description</Label>
+				<div className="space-y-2">
+					<Label className="text-gray-300">Description</Label>
 					<Textarea
-						className="border-black text-black"
+						className="bg-white/5 border-white/10 text-white focus:border-orange-500/50 focus:ring-orange-500/20 min-h-[100px]"
+						placeholder="Describe the food items..."
 						{...register("description")}
 					/>
 				</div>
 
-				<div>
-					<Label className="text-lg">Food Type</Label>
+				<div className="space-y-3">
+					<Label className="text-gray-300">Food Type</Label>
 					<RadioGroup
-						className="flex space-x-4"
+						className="flex space-x-6"
 						onValueChange={(val) => setValue("foodType", val)}>
-						<RadioGroupItem value="veg" id="veg" />
-						<Label htmlFor="veg">Veg</Label>
-						<RadioGroupItem value="nonVeg" id="nonVeg" />
-						<Label htmlFor="nonVeg">Non-Veg</Label>
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem value="veg" id="veg" className="border-white text-orange-500" />
+							<Label htmlFor="veg" className="text-gray-300 cursor-pointer hover:text-white">Veg</Label>
+						</div>
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem value="nonVeg" id="nonVeg" className="border-white text-orange-500" />
+							<Label htmlFor="nonVeg" className="text-gray-300 cursor-pointer hover:text-white">Non-Veg</Label>
+						</div>
 					</RadioGroup>
-					<p className="text-red-500 text-sm">
+					<p className="text-red-400 text-xs">
 						{errors.foodType?.message}
 					</p>
 				</div>
 
-				<div className="grid grid-cols-2 gap-4">
-					<div>
-						<Label className="text-lg">Start Time</Label>
+				<div className="grid grid-cols-2 gap-6">
+					<div className="space-y-2">
+						<Label className="text-gray-300">Start Time</Label>
 						<Input
 							type="time"
-							className="border-black text-black"
+							className="bg-white/5 border-white/10 text-white focus:border-orange-500/50 focus:ring-orange-500/20 [color-scheme:dark]"
 							{...register("startTime")}
 						/>
 					</div>
-					<div>
-						<Label className="text-lg">End Time</Label>
+					<div className="space-y-2">
+						<Label className="text-gray-300">End Time</Label>
 						<Input
 							type="time"
-							className="border-black text-black"
+							className="bg-white/5 border-white/10 text-white focus:border-orange-500/50 focus:ring-orange-500/20 [color-scheme:dark]"
 							{...register("endTime")}
 						/>
 					</div>
 				</div>
 
-				<div>
-					<Label className="text-lg">No. of Slots Available</Label>
+				<div className="space-y-2">
+					<Label className="text-gray-300">No. of Slots Available</Label>
 					<Input
 						type="number"
-						className="border-black text-black"
+						className="bg-white/5 border-white/10 text-white focus:border-orange-500/50 focus:ring-orange-500/20"
 						{...register("slots")}
 						min={1}
 					/>
@@ -266,8 +278,9 @@ export default function FoodAlertForm() {
 
 				<Button
 					type="submit"
-					className="w-full bg-white cursor-pointer text-black border-2 border-black hover:bg-gray-300">
-					{!isSubmitting ? "Start GiveAway" : "Starting..."}
+					disabled={isSubmitting}
+					className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold py-6 rounded-xl shadow-lg hover:shadow-orange-500/25 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed text-lg">
+					{!isSubmitting ? "Broadcast Alert" : "Publishing..."}
 				</Button>
 			</form>
 		</div>

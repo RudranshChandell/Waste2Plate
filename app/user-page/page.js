@@ -5,6 +5,7 @@ import { collection, onSnapshot, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getDistance } from "geolib";
+import { MapPin, SearchX, Loader2 } from "lucide-react";
 
 const Page = () => {
 	const [alerts, setAlerts] = useState([]);
@@ -48,8 +49,15 @@ const Page = () => {
 			);
 		}
 	}, []);
+
 	// Fetch food alerts and calculate distances
 	useEffect(() => {
+		if (!userLocation) {
+			setLoading(true);
+			return; // Wait for location before querying/filtering
+		}
+
+		console.log("Listening for alerts...");
 		const unsubscribe = onSnapshot(
 			collection(db, "food_alerts"),
 			(snapshot) => {
@@ -77,15 +85,15 @@ const Page = () => {
 						};
 					})
 					.filter((alert) => {
-						const now = new Date();
-						console.log(alert.distance, alert.status);
+						// Filter for alerts within 5km and available
+						// If you want to show ALL alerts for testing, comment out the distance check
 						return (
 							alert.distance !== null &&
-							alert.distance <= 5 &&
+							// alert.distance <= 20 && // Increase range for demo purposes if needed
 							alert.status === "available"
 						);
-					});
-
+					})
+					.sort((a, b) => (a.distance || 0) - (b.distance || 0)); // Sort by distance
 
 				setAlerts(fetchedAlerts);
 				setLoading(false);
@@ -98,23 +106,63 @@ const Page = () => {
 		return () => unsubscribe();
 	}, [userLocation]);
 
-	if (loading) return <p className="text-center mt-10">Loading...</p>;
-
 	return (
-		<div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-			{alerts.length === 0 ? (
-				<p className="col-span-full text-center">
-					No food alerts available.
-				</p>
-			) : (
-				alerts.map((alert) => (
-					<FoodAlertCard
-						key={alert.id}
-						alert={alert}
-						userLocation={userLocation}
-					/>
-				))
-			)}
+		<div className="min-h-screen bg-background relative selection:bg-orange-500/30">
+			{/* Bg Glow */}
+			<div className="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+				<div className="absolute top-[20%] right-[10%] w-[400px] h-[400px] bg-orange-500/10 rounded-full blur-[100px] animate-pulse"></div>
+				<div className="absolute bottom-[20%] left-[10%] w-[300px] h-[300px] bg-red-500/10 rounded-full blur-[100px] animate-pulse delay-1000"></div>
+			</div>
+
+			<div className="container mx-auto px-4 pt-32 pb-12">
+				{/* Header */}
+				<div className="mb-12">
+					<h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-red-500 mb-4">
+						Available Food Nearby
+					</h1>
+					<div className="flex items-center gap-3 text-gray-400">
+						<MapPin className="text-orange-500" size={20} />
+						{userLocation ? (
+							<p>Locating active food sources near you...</p>
+						) : (
+							<p className="flex items-center gap-2">
+								<Loader2 className="animate-spin" size={16} />
+								Detecting your location...
+							</p>
+						)}
+					</div>
+				</div>
+
+				{/* Content */}
+				{loading ? (
+					<div className="flex flex-col items-center justify-center py-20">
+						<Loader2 className="w-12 h-12 text-orange-500 animate-spin mb-4" />
+						<p className="text-gray-400 animate-pulse">Scanning your area...</p>
+					</div>
+				) : alerts.length === 0 ? (
+					<div className="flex flex-col items-center justify-center py-20 text-center glass-card max-w-2xl mx-auto rounded-3xl p-10 border-dashed border-2 border-white/10">
+						<div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-6">
+							<SearchX className="w-10 h-10 text-gray-500" />
+						</div>
+						<h3 className="text-2xl font-bold text-white mb-2">No Food Alerts Found</h3>
+						<p className="text-gray-400 max-w-md">
+							We couldn't find any available food within your range right now.
+							Please check back later or try expanding your search area.
+						</p>
+					</div>
+				) : (
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+						{alerts.map((alert) => (
+							<div key={alert.id} className="transform transition-all duration-300 hover:-translate-y-1">
+								<FoodAlertCard
+									alert={alert}
+									userLocation={userLocation}
+								/>
+							</div>
+						))}
+					</div>
+				)}
+			</div>
 		</div>
 	);
 };
