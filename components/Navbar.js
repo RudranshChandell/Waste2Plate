@@ -22,30 +22,33 @@ const Navbar = () => {
     };
 
     return (
-		<nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-white/5 bg-[#0a0a0a]/80 backdrop-blur-md supports-[backdrop-filter]:bg-[#0a0a0a]/50">
-			<div className="container mx-auto px-6 py-4 flex items-center justify-between">
+        <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-white/5 bg-[#0a0a0a]/80 backdrop-blur-md supports-[backdrop-filter]:bg-[#0a0a0a]/50">
+            <div className="container mx-auto px-6 py-4 flex items-center justify-between">
                 {/* Logo Section */}
                 <div onClick={navigateHome} className="cursor-pointer flex items-center gap-2">
                     {/* Placeholder for Logo if image fails or just use Text */}
-                     <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-red-500">
+                    <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-red-500">
                         Waste2Plate
                     </h1>
                 </div>
 
                 {/* Navigation Menu */}
                 <div className="hidden md:flex items-center space-x-8">
-                     <Link href="/" className="text-sm font-medium text-gray-300 hover:text-white transition-colors hover:scale-105 transform">
+                    <Link href="/" className="text-sm font-medium text-gray-300 hover:text-white transition-colors hover:scale-105 transform">
                         Home
-                     </Link>
-                     <Link href="https://chat.whatsapp.com/HnCutFbUzJ4LUlkbRiF1Qz" className="text-sm font-medium text-gray-300 hover:text-white transition-colors hover:scale-105 transform">
+                    </Link>
+                    <Link href="https://chat.whatsapp.com/HnCutFbUzJ4LUlkbRiF1Qz" className="text-sm font-medium text-gray-300 hover:text-white transition-colors hover:scale-105 transform">
                         Join Us
-                     </Link>
-                     <a href="/faq.pdf" download className="text-sm font-medium text-gray-300 hover:text-white transition-colors hover:scale-105 transform">
+                    </Link>
+                    <a href="/faq.pdf" download className="text-sm font-medium text-gray-300 hover:text-white transition-colors hover:scale-105 transform">
                         FAQs
-                     </a>
-                     <Link href="/t&c" className="text-sm font-medium text-gray-300 hover:text-white transition-colors hover:scale-105 transform">
+                    </a>
+                    <Link href="/t&c" className="text-sm font-medium text-gray-300 hover:text-white transition-colors hover:scale-105 transform">
                         Terms
-                     </Link>
+                    </Link>
+                    <Link href="/about" className="text-sm font-medium text-gray-300 hover:text-white transition-colors hover:scale-105 transform">
+                        About
+                    </Link>
                 </div>
 
                 {/* Actions */}
@@ -60,8 +63,8 @@ const Navbar = () => {
                     </Link>
                 </div>
             </div>
-		</nav>
-	);
+        </nav>
+    );
 };
 
 export default Navbar;
