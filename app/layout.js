@@ -9,6 +9,7 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+	// The RootLayout component is the main layout for the application. It wraps all pages and includes the Navbar and Footer components.
 	return (
 		<html lang="en">
 			<body>
